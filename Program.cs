@@ -5,12 +5,10 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddDbContext<AgendaContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoPadrao")));
 
-// Adicionar o Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -21,24 +19,22 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Adicionar o servi�o de Controllers
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configurar o pipeline do Swagger (Somente em Desenvolvimento)
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger(); // Habilita o Swagger
+    app.UseSwagger(); 
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Agenda v1");
-        c.RoutePrefix = string.Empty; // Se voc� quiser que o Swagger seja a p�gina inicial
+        c.RoutePrefix = string.Empty; 
     });
 }
 
 app.UseHttpsRedirection();
-app.MapControllers(); // Mapeia os controllers
+app.MapControllers(); 
 
 app.Run();
 
@@ -49,12 +45,12 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddDbContext<AgendaContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoPadrao")));
 
-// Adicionar o Swagger
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -65,24 +61,23 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Adicionar o servi�o de Controllers
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configurar o pipeline do Swagger (Somente em Desenvolvimento)
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger(); // Habilita o Swagger
+    app.UseSwagger(); 
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Agenda v1");
-        c.RoutePrefix = string.Empty; // Se voc� quiser que o Swagger seja a p�gina inicial
+        c.RoutePrefix = string.Empty; 
     });
 }
 
 app.UseHttpsRedirection();
-app.MapControllers(); // Mapeia os controllers
-
+app.MapControllers(); 
 app.Run();
 
