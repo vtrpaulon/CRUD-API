@@ -41,7 +41,7 @@ app.UseHttpsRedirection();
 app.MapControllers(); // Mapeia os controllers
 
 app.Run();
-=======
+
 using ModuloAPI.Context;
 using ModuloAPI.ModelsEntities;
 using Microsoft.EntityFrameworkCore;
