@@ -1,25 +1,8 @@
 using CRUD_API.Context;
+using CRUD_API.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(new WebApplicationOptions
-{
-    Args = args,
-    ContentRootPath = Directory.GetCurrentDirectory(),
-    EnvironmentName = Environments.Development // Garante que ele carrega appsettings.Development.json, se existir
-});
-
-// ConfiguraÁ„o do banco de dados (mover para antes de builder.Build)
-var connectionString = builder.Configuration.GetConnectionString("ConexaoPadrao");
-
-if (string.IsNullOrEmpty(connectionString))
-{
-    throw new InvalidOperationException("A string de conex„o n„o foi encontrada no appsettings.json.");
-}
-
-builder.Services.AddDbContext<AgendaContext>(options =>
-    options.UseSqlServer(connectionString));
-
-var app = builder.Build();
+var builder = WebApplication.CreateBuilder();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -27,6 +10,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+// Configura√ß√£o do banco de dados (mover para antes de builder.Build)
+var connectionString = builder.Configuration.GetConnectionString("ConexaoPadrao");
+
+//Registrar Repositories
+builder.Services.AddScoped<IContatoRepository,ContatoRepository>();
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("A string de conex√£o n√£o foi encontrada no appsettings.json.");
+} else {
+    builder.Services.AddDbContext<AgendaContext>(options => options.UseSqlServer(connectionString));
+}
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
