@@ -1,28 +1,22 @@
-using CRUD_API.Context;
 using CRUD_API.Model;
+using CRUD_API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CRUD_API.Controllers
+namespace CRUD_API.Controllers_API.Controllers
 {
-    [ApiController]
+    //api/contato
     [Route("[controller]")]
-    public class ContatoController : ControllerBase
+    public class ContatoController(IContatoRepository contatoRepository) : ControllerBase
     {
-        private readonly AgendaContext _context;
 
-        public ContatoController(AgendaContext context)
+        [HttpPost("create")]
+        public async Task<IActionResult> Create(Contato contato)
         {
-            _context = context;
-        }
-        [HttpPost("Create")]
-        public IActionResult Create(Contato contato)
-        {
-            _context.Add(contato);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(ObterPorId), new { id = contato.Id }, contato);
+            await contatoRepository.CreateContato(contato);
+            return Created();
         }
 
-        [HttpGet("{id}")]
+        /* [HttpGet("{id}")]
         public IActionResult ObterPorId(int id)
         {
             var contato = _context.Contatos.Find(id);
@@ -32,6 +26,7 @@ namespace CRUD_API.Controllers
             }
             return Ok(contato);
         }
+
         [HttpGet]
         public IActionResult Listar()
         {
@@ -39,7 +34,7 @@ namespace CRUD_API.Controllers
             return Ok(contatos);
         }
 
-        [HttpGet("ListarPorNome")]
+        [HttpGet("listar-por-nome")]
         public IActionResult ListarPorNome(string nome)
         {
             var contatos = _context.Contatos.Where(x => x.Nome.Contains(nome));
@@ -76,7 +71,6 @@ namespace CRUD_API.Controllers
             _context.Contatos.Remove(contato);
             _context.SaveChanges();
             return Ok();
-        }
-
+        } */
     }
 }
