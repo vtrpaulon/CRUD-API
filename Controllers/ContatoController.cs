@@ -13,57 +13,53 @@ namespace CRUD_API.Controllers_API.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create(Contato contato)
         {
-            await contatoRepository.CreateContato(contato);
+            await contatoRepository.CreateContatoAsync(contato);
             return Created();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorId(int id)
         {
-            await contatoRepository.GetByID(id);
-            return Ok();
+            var contato = await contatoRepository.GetByIdAsync(id);
+            return Ok(contato);
         }
 
         [HttpGet]
         public async Task<IActionResult> Listar()
         {
-            await contatoRepository.GetAll();
-            return Ok();
+            var lista = await contatoRepository.GetAllAsync();
+            return Ok(lista);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Atualizar(int id, Contato contato)
+        [HttpPut]
+        public async Task<IActionResult> Atualizar([FromBody] Contato contato)
         {
-            await contatoRepository.FindAsync(id); // Busca o contato no banco
+            var contatoDoBanco = await contatoRepository.GetByIdAsync(contato.Id); // Busca o contato no banco
 
-            if (contato == null)
+            if (contatoDoBanco == null)
             {
                 return NotFound();
             }
 
-            // Atualiza os dados do contato
-            contato.Nome = contato.Nome;
-            contato.Email = contato.Email;
-            contato.Telefone = contato.Telefone;
-            contato.Ativo = contato.Ativo;
+            contatoDoBanco.Update(contato.Nome, contato.Email, contato.Telefone, contato.Ativo);
 
-            contato.Update(contato);
-            await contato.SaveChangesAsync(); // Adiciona await para operação assíncrona
+            await contatoRepository.UpdateAsync(contatoDoBanco);
 
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Deletar(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
-            var contato = _context.Contatos.Find(id);
-            if (contato == null)
+            var contatoDoBanco = await contatoRepository.GetByIdAsync(id);
+
+            if (contatoDoBanco == null)
             {
                 return NotFound();
             }
-            _context.Contatos.Remove(contato);
-            _context.SaveChanges();
+            await contatoRepository.DeletarAsync(contatoDoBanco);
+
             return Ok();
-        } */
+        }
     }
 }
