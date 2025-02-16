@@ -1,6 +1,7 @@
 using CRUD_API.Model;
 using CRUD_API.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRUD_API.Controllers_API.Controllers
 {
@@ -16,48 +17,40 @@ namespace CRUD_API.Controllers_API.Controllers
             return Created();
         }
 
-        /* [HttpGet("{id}")]
-        public IActionResult ObterPorId(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ObterPorId(int id)
         {
-            var contato = _context.Contatos.Find(id);
+            await contatoRepository.GetByID(id);
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Listar()
+        {
+            await contatoRepository.GetAll();
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(int id, Contato contato)
+        {
+            await contatoRepository.FindAsync(id); // Busca o contato no banco
+
             if (contato == null)
             {
                 return NotFound();
             }
-            return Ok(contato);
-        }
 
-        [HttpGet]
-        public IActionResult Listar()
-        {
-            var contatos = _context.Contatos;
-            return Ok(contatos);
-        }
+            // Atualiza os dados do contato
+            contato.Nome = contato.Nome;
+            contato.Email = contato.Email;
+            contato.Telefone = contato.Telefone;
+            contato.Ativo = contato.Ativo;
 
-        [HttpGet("listar-por-nome")]
-        public IActionResult ListarPorNome(string nome)
-        {
-            var contatos = _context.Contatos.Where(x => x.Nome.Contains(nome));
-            return Ok(contatos);
-        }
+            contato.Update(contato);
+            await contato.SaveChangesAsync(); // Adiciona await para operação assíncrona
 
-        [HttpPut("{id}")]
-        public IActionResult Atualizar(int id, Contato contato)
-        {
-            var contatoBanco = _context.Contatos.Find(id);
-            if (contatoBanco == null)
-            {
-                return NotFound();
-            }
-            contatoBanco.Nome = contato.Nome;
-            contatoBanco.Email = contato.Email;
-            contatoBanco.Telefone = contato.Telefone;
-            contatoBanco.Ativo = contato.Ativo;
-
-            _context.Contatos.Update(contatoBanco);
-            _context.SaveChanges();
-
-            return Ok(contatoBanco);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
