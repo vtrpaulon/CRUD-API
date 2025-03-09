@@ -25,11 +25,13 @@ namespace CRUD_API.Repositories
 
         public async Task<Contato?> GetByIdAsync(int id)
         {
+            /* return await context.Contatos.AsNoTracking().SingleOrDefaultAsync(p => p.Id == id); */
             return await context.Contatos.AsNoTracking().SingleOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task UpdateAsync(Contato contato)
         {
+            //inicia o tracking do objeto novamente
             context.Contatos.Update(contato);
             await context.SaveChangesAsync();
         }

@@ -1,5 +1,6 @@
 using CRUD_API.Context;
 using CRUD_API.Repositories;
+using CRUD_API.Services.Contato;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder();
@@ -14,12 +15,18 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("ConexaoPadrao");
 
 //Registrar Repositories
-builder.Services.AddScoped<IContatoRepository,ContatoRepository>();
+builder.Services.AddScoped<IContatoRepository, ContatoRepository>();
+
+//Registrar Services
+builder.Services.AddScoped<IContatoService, ContatoService>();
+
 
 if (string.IsNullOrEmpty(connectionString))
 {
     throw new InvalidOperationException("A string de conexão não foi encontrada no appsettings.json.");
-} else {
+}
+else
+{
     builder.Services.AddDbContext<AgendaContext>(options => options.UseSqlServer(connectionString));
 }
 

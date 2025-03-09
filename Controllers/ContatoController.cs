@@ -1,54 +1,45 @@
 using CRUD_API.Model;
-using CRUD_API.Repositories;
+using CRUD_API.Services.Contato;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CRUD_API.Controllers_API.Controllers
 {
     //api/contato
     [Route("[controller]")]
-    public class ContatoController(IContatoRepository contatoRepository) : ControllerBase
+    public class ContatoController(IContatoService contatoService) : ControllerBase
     {
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create(Contato contato)
+        public async Task<IActionResult> Criar(Contato contato)
         {
-            await contatoRepository.CreateContatoAsync(contato);
-            return Created();
+            await contatoService.CriarAsync(contato);
+            return Created("", contato);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorId(int id)
         {
-            var contato = await contatoRepository.GetByIdAsync(id);
+            var contato = await contatoService.ObterPorId(id);
             return Ok(contato);
         }
 
         [HttpGet]
         public async Task<IActionResult> Listar()
         {
-            var lista = await contatoRepository.GetAllAsync();
+            var lista = await contatoService.ListarAsync();
             return Ok(lista);
         }
 
         [HttpPut]
         public async Task<IActionResult> Atualizar([FromBody] Contato contato)
         {
-            var contatoDoBanco = await contatoRepository.GetByIdAsync(contato.Id); // Busca o contato no banco
-
-            if (contatoDoBanco == null)
-            {
-                return NotFound();
-            }
-
-            contatoDoBanco.Update(contato.Nome, contato.Email, contato.Telefone, contato.Ativo);
-
-            await contatoRepository.UpdateAsync(contatoDoBanco);
+            await contatoService.AtualizarAsync(contato);
 
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+
+        /*[HttpDelete("{id}")]
         public async Task<IActionResult> Deletar(int id)
         {
             var contatoDoBanco = await contatoRepository.GetByIdAsync(id);
@@ -60,6 +51,6 @@ namespace CRUD_API.Controllers_API.Controllers
             await contatoRepository.DeletarAsync(contatoDoBanco);
 
             return Ok();
-        }
+        } */
     }
 }
