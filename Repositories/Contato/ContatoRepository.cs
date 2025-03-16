@@ -35,6 +35,11 @@ namespace CRUD_API.Repositories
             context.Contatos.Update(contato);
             await context.SaveChangesAsync();
         }
+        public async Task DeleteAsync(Contato contato)
+        {
+            context.Contatos.Remove(contato);
+            await context.SaveChangesAsync();
+        }
 
     }
 }

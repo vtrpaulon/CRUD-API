@@ -39,18 +39,12 @@ namespace CRUD_API.Controllers_API.Controllers
         }
 
 
-        /*[HttpDelete("{id}")]
-        public async Task<IActionResult> Deletar(int id)
-        {
-            var contatoDoBanco = await contatoRepository.GetByIdAsync(id);
-
-            if (contatoDoBanco == null)
-            {
-                return NotFound();
-            }
-            await contatoRepository.DeletarAsync(contatoDoBanco);
+        [HttpDelete]
+        public async Task<IActionResult> DeletarAsync([FromBody] Contato contato)
+        {           
+            await contatoService.DeletarAsync(contato);
 
             return Ok();
-        } */
+        } 
     }
 }

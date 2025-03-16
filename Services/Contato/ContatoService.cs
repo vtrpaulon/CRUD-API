@@ -27,5 +27,9 @@ namespace CRUD_API.Services.Contato
         {
             await contatoRepository.UpdateAsync(contato);
         }
+        public async Task DeletarAsync(Model.Contato contato)
+        {
+            await contatoRepository.DeletarAsync(contato);
+        }
     }
 }
